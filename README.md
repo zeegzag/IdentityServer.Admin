@@ -1,13 +1,13 @@
-![Logo](docs/Images/Skoruba.Duende.IdentityServer.Admin-Logo-ReadMe.png)
+![Logo](docs/Images/zeegzag.Duende.IdentityServer.Admin-Logo-ReadMe.png)
 
-# Skoruba.Duende.IdentityServer.Admin ⚡
+# zeegzag.Duende.IdentityServer.Admin ⚡
 
 > The administration for the Duende IdentityServer and Asp.Net Core Identity
 
 ## Project Status
 
-[![Build status](https://ci.appveyor.com/api/projects/status/563ug5gcxk904m6g/branch/main?svg=true)](https://ci.appveyor.com/project/JanSkoruba/duende-identityserver-admin/branch/main)
-[![Build status](https://img.shields.io/badge/Discord-Skoruba-%235865F2)](https://discord.gg/qTqQCSKWkX)
+[![Build status](https://ci.appveyor.com/api/projects/status/563ug5gcxk904m6g/branch/main?svg=true)](https://ci.appveyor.com/project/Janzeegzag/duende-identityserver-admin/branch/main)
+[![Build status](https://img.shields.io/badge/Discord-zeegzag-%235865F2)](https://discord.gg/qTqQCSKWkX)
 
 The application is written in the **Asp.Net Core MVC - using .NET 8.0**
 
@@ -22,13 +22,13 @@ The application is written in the **Asp.Net Core MVC - using .NET 8.0**
 - 🔒 **NOTE:** The project uses the default database migrations which affect your database, therefore double check the migrations according to your database provider and create a database backup
 
 ```sh
-dotnet new install Skoruba.Duende.IdentityServer.Admin.Templates::2.0.0
+dotnet new install zeegzag.Duende.IdentityServer.Admin.Templates::2.0.0
 ```
 
 ### Create new project:
 
 ```sh
-dotnet new skoruba.duende.isadmin --name MyProject --title MyProject --adminemail "admin@example.com" --adminpassword "Pa$$word123" --adminrole MyRole --adminclientid MyClientId --adminclientsecret MyClientSecret --dockersupport true
+dotnet new zeegzag.duende.isadmin --name MyProject --title MyProject --adminemail "admin@example.com" --adminpassword "Pa$$word123" --adminrole MyRole --adminclientid MyClientId --adminclientsecret MyClientSecret --dockersupport true
 ```
 
 Project template options:
@@ -50,14 +50,7 @@ Project template options:
 
 ### Template uses following list of nuget packages
 
-- [Available nuget packages](https://www.nuget.org/profiles/skoruba)
-
-### Running in Visual Studio
-
-- Set Startup projects:
-  - Skoruba.Duende.IdentityServer.Admin
-  - Skoruba.Duende.IdentityServer.Admin.Api
-  - Skoruba.Duende.IdentityServer.STS.Identity
+- [Available nuget packages](https://www.nuget.org/profiles/zeegzag)
 
 ## Configuration of Administration for Deployment
 
@@ -70,25 +63,20 @@ Project template options:
 
 ### Admin UI - Light mode 🌞
 
-![Admin-preview](docs/Images/App/Skoruba-Home-Preview.PNG)
+![Admin-preview](docs/Images/App/zeegzag-Home-Preview.PNG)
 
 ### Admin UI - Dark mode 🌙
 
-![Admin-preview](docs/Images/App/Skoruba-Home-Preview-Dark.PNG)
+![Admin-preview](docs/Images/App/zeegzag-Home-Preview-Dark.PNG)
 
 ### Security token service (STS)
 
-![Admin-preview](docs/Images/App/Skoruba-STS-Home-Preview.PNG)
+![Admin-preview](docs/Images/App/zeegzag-STS-Home-Preview.PNG)
 
 ### Forms:
 
-![Admin-preview-form](docs/Images/App/Skoruba-Forms-Preview.PNG)
+![Admin-preview-form](docs/Images/App/zeegzag-Forms-Preview.PNG)
 
-## Cloning
-
-```sh
-git clone https://github.com/skoruba/Duende.IdentityServer.Admin
-```
 
 ## Running via Docker
 
@@ -98,9 +86,9 @@ git clone https://github.com/skoruba/Duende.IdentityServer.Admin
 
 ### DNS
 
-We need some resolving capabilities in order for the project to work. The domain `skoruba.local` is used here to represent the domain this setup is hosted on. The domain-name needs to be FQDN (fully qualified domain name).
+We need some resolving capabilities in order for the project to work. The domain `zeegzag.local` is used here to represent the domain this setup is hosted on. The domain-name needs to be FQDN (fully qualified domain name).
 
-Thus first, we need the domain `skoruba.local` to resolve to the docker-host machine. If you want this to work on your local machine only, use the first option.
+Thus first, we need the domain `local` to resolve to the docker-host machine. If you want this to work on your local machine only, use the first option.
 
 #### DNS on docker-host machine only
 
@@ -112,10 +100,10 @@ Edit your hosts file:
 and add the following entries:
 
 ```custom
-127.0.0.1 skoruba.local sts.skoruba.local admin.skoruba.local admin-api.skoruba.local
+127.0.0.1 zeegzag.local sts.zeegzag.local admin.zeegzag.local admin-api.zeegzag.local
 ```
 
-This way your host machine resolves `skoruba.local` and its subdomains to itself.
+This way your host machine resolves `zeegzag.local` and its subdomains to itself.
 
 ### Certificates
 
@@ -127,8 +115,6 @@ We also need certificates in order to serve on HTTPS. We'll make our own self-si
 
 ##### Create the root certificate
 
-Use [mkcert](https://github.com/FiloSottile/mkcert) to generate local self-signed certificates.
-
 On windows `mkcert -install` must be executed under elevated Administrator privileges. Then copy over the CA Root certificate over to the project as we want to mount this in later into the containers without using an environment variable.
 
 ```bash
@@ -137,18 +123,6 @@ mkcert --install
 copy $env:LOCALAPPDATA\mkcert\rootCA.pem ./cacerts.pem
 copy $env:LOCALAPPDATA\mkcert\rootCA.pem ./cacerts.crt
 ```
-
-##### Create the `skoruba.local` certificates
-
-Generate a certificate for `skoruba.local` with wildcards for the subdomains. The name of the certificate files need to match with actual domain-names in order for the nginx-proxy to pick them up correctly. We want both the crt-key and the pfx version.
-
-```bash
-cd shared/nginx/certs
-mkcert -cert-file skoruba.local.crt -key-file skoruba.local.key skoruba.local *.skoruba.local
-mkcert -pkcs12 skoruba.local.pfx skoruba.local *.skoruba.local
-```
-
-##### This docker setup is come from this [repository](https://github.com/bravecobra/identityserver-ui) - thanks to [bravecobra](https://github.com/bravecobra). 😊
 
 ### Run docker-compose
 
@@ -162,10 +136,6 @@ docker-compose up -d
 
 > It is also possible to set as startup project the project called `docker-compose` in Visual Studio.
 
-### Docker images
-
-- Docker images will be available also in [docker hub](https://hub.docker.com/u/skoruba)
-
 ### Publish Docker images to Docker hub
 
 - Check the script in `build/publish-docker-images.ps1` - change the profile name according to your requirements.
@@ -173,10 +143,10 @@ docker-compose up -d
 ## Installation of the Client Libraries
 
 ```sh
-cd src/Skoruba.Duende.IdentityServer.Admin
+cd src/zeegzag.Duende.IdentityServer.Admin
 npm install
 
-cd src/Skoruba.Duende.IdentityServer.STS.Identity
+cd src/zeegzag.Duende.IdentityServer.STS.Identity
 npm install
 ```
 
@@ -321,7 +291,7 @@ The you need specify the key identifier in configuration:
     "MinimumLevel": {
       "Default": "Error",
       "Override": {
-        "Skoruba": "Information"
+        "zeegzag": "Information"
       }
     },
     "WriteTo": [
@@ -353,7 +323,7 @@ The you need specify the key identifier in configuration:
 
 ## Audit Logging
 
-- This solution uses audit logging via - https://github.com/skoruba/AuditLogging (check this link for more detal about this implementation :blush:)
+- This solution uses audit logging via - https://github.com/zeegzag/AuditLogging (check this link for more detal about this implementation :blush:)
 - In the Admin UI project is following setup:
 
 ```cs
@@ -395,8 +365,8 @@ You can also use your custom theme by integrating it in your project or hosting 
 
 ```json
   "AdminConfiguration": {
-    "PageTitle": "Skoruba Duende IdentityServer",
-    "HomePageLogoUri": "~/images/skoruba-icon.png",
+    "PageTitle": "zeegzag Duende IdentityServer",
+    "HomePageLogoUri": "~/images/zeegzag-icon.png",
     "FaviconUri": "~/favicon.ico",
     "Theme": "united",
     "CustomThemeCss": null,
@@ -417,7 +387,7 @@ In `appsettings.json` is following configuration:
   }
 ```
 
-The `Skoruba.Duende.IdentityServer.Admin.BusinessLogic` layer contains folder called `Events` for audit logging. In each method in Services is called function `LogEventAsync` like this:
+The `zeegzag.Duende.IdentityServer.Admin.BusinessLogic` layer contains folder called `Events` for audit logging. In each method in Services is called function `LogEventAsync` like this:
 
 ```
 await AuditEventLogger.LogEventAsync(new ClientDeletedEvent(client));
@@ -425,54 +395,9 @@ await AuditEventLogger.LogEventAsync(new ClientDeletedEvent(client));
 
 Final audit log is available in the table `dbo.AuditLog`.
 
-### Login Configuration
-
-- In `Skoruba.Duende.IdentityServer.STS.Identity` - in `appsettings.json` is possible to specify which column will be used for login (`Username` or `Email`):
-
-```
-  "LoginConfiguration": {
-    "ResolutionPolicy": "Username"
-  }
-```
-
-or using `Email`:
-
-```
-  "LoginConfiguration": {
-    "ResolutionPolicy": "Email"
-  }
-```
-
-### Register Configuration
-
-- In `Skoruba.Duende.IdentityServer.STS.Identity` - in `appsettings.json` is possible to disable user registration (`default: true`):
-
-```
- "RegisterConfiguration": {
-    "Enabled": false
-  }
-```
-
-## How to configure API & Swagger
-
-- For development is running on url - `https://localhost:44302` and swagger UI is available on url - `https://localhost:44302/swagger`
-- For swagger UI is configured a client and an API in STS:
-
-```
-"AdminApiConfiguration": {
-  "IdentityServerBaseUrl": "https://localhost:44310",
-  "OidcSwaggerUIClientId": "skoruba_identity_admin_api_swaggerui",
-  "OidcApiName": "skoruba_identity_admin_api"
-}
-```
-
-- Swagger UI contains following endpoints:
-
-![SwaggerUI-preview](docs/Images/Admin-Swagger-UI.PNG)
-
 ## How to configure an external provider in STS
 
-- In `Skoruba.Duende.IdentityServer.STS.Identity/Helpers/StartupHelpers.cs` - is method called `AddExternalProviders` which contains the example with `GitHub`, `AzureAD` configured in `appsettings.json`:
+- In `zeegzag.Duende.IdentityServer.STS.Identity/Helpers/StartupHelpers.cs` - is method called `AddExternalProviders` which contains the example with `GitHub`, `AzureAD` configured in `appsettings.json`:
 
 ```
 "ExternalProvidersConfiguration": {
@@ -579,64 +504,6 @@ Integration tests use StartupTest class which is pre-configured with:
 - `Authentication` is setup for `CookieAuthentication` - with fake login url for testing purpose only
 - `AuthenticatedTestRequestMiddleware` - middleware for testing of authentication.
 
-## Overview
-
-### Solution structure:
-
-- STS:
-
-  - `Skoruba.Duende.IdentityServer.STS.Identity` - project that contains the instance of Duende.IdentityServer and combine these samples - [Quickstart UI for the Duende.IdentityServer with Asp.Net Core Identitye](https://github.com/DuendeSoftware/IdentityServer/tree/main/hosts/AspNetIdentity) and [Quickstart UI for the Duende.IdentityServer with EF Core storage](https://github.com/DuendeSoftware/IdentityServer/tree/main/hosts/EntityFramework) and [damienbod - IdentityServer4 and Identity template](https://github.com/damienbod/IdentityServer4AspNetCoreIdentityTemplate)
-
-- Admin UI Api:
-
-  - `Skoruba.Duende.IdentityServer.Admin.Api` - project with Api for managing data of Duende.IdentityServer and Asp.Net Core Identity, with swagger support as well
-
-- Admin UI:
-
-  - `Skoruba.Duende.IdentityServer.Admin.UI` - ASP.NET Core MVC application that contains Admin UI
-
-  - `Skoruba.Duende.IdentityServer.Admin` - ASP.NET Core MVC application that uses Admin UI package and it's only for application bootstrap
-
-  - `Skoruba.Duende.IdentityServer.Admin.BusinessLogic` - project that contains Dtos, Repositories, Services and Mappers for the Duende.IdentityServer
-
-  - `Skoruba.Duende.IdentityServer.Admin.BusinessLogic.Identity` - project that contains Dtos, Repositories, Services and Mappers for the Asp.Net Core Identity
-
-  - `Skoruba.Duende.IdentityServer.Admin.BusinessLogic.Shared` - project that contains shared Dtos and ExceptionHandling for the Business Logic layer of the Duende.IdentityServer and Asp.Net Core Identity
-
-  - `Skoruba.Duende.IdentityServer.Shared` - Shared common Identity DTOS for Admin UI, Admin UI Api and STS
-
-  - `Skoruba.Duende.IdentityServer.Shared.Configuration` - Shared common layer for Admin UI, Admin UI Api and STS
-
-  - `Skoruba.Duende.IdentityServer.Admin.EntityFramework` - EF Core data layer that contains Entities for the Duende.IdentityServer
-
-  - `Skoruba.Duende.IdentityServer.Admin.EntityFramework.Configuration` - EF Core data layer that contains configurations
-
-  - `Skoruba.Duende.IdentityServer.Admin.EntityFramework.Identity` - EF Core data layer that contains Repositories for the Asp.Net Core Identity
-
-  - `Skoruba.Duende.IdentityServer.Admin.EntityFramework.Extensions` - project that contains extensions related to EntityFramework
-
-  - `Skoruba.Duende.IdentityServer.Admin.EntityFramework.Shared` - project that contains DbContexts for the Duende.IdentityServer, Logging and Asp.Net Core Identity, inluding shared Identity entities
-
-  - `Skoruba.Duende.IdentityServer.Admin.EntityFramework.SqlServer` - project that contains migrations for SqlServer
-
-  - `Skoruba.Duende.IdentityServer.Admin.EntityFramework.MySql` - project that contains migrations for MySql
-
-  - `Skoruba.Duende.IdentityServer.Admin.EntityFramework.PostgreSQL` - project that contains migrations for PostgreSQL
-
-- Tests:
-
-  - `Skoruba.Duende.IdentityServer.Admin.IntegrationTests` - xUnit project that contains the integration tests for AdminUI
-
-  - `Skoruba.Duende.IdentityServer.Admin.Api.IntegrationTests` - xUnit project that contains the integration tests for AdminUI Api
-
-  - `Skoruba.Duende.IdentityServer.Admin.UnitTests` - xUnit project that contains the unit tests for AdminUI
-
-  - `Skoruba.Duende.IdentityServer.STS.IntegrationTests` - xUnit project that contains the integration tests for STS
-
-### The admininistration contains the following sections:
-
-![Skoruba.Duende.IdentityServer.Admin App](docs/Images/Skoruba.Duende.IdentityServer.Admin-Solution.png)
-
 ## Duende.IdentityServer
 
 **Clients**
@@ -694,77 +561,6 @@ It is possible to define the configuration according the client type - by defaul
 - Entities:
   - Role Claims
 
-## Application Diagram
-
-![Skoruba.Duende.IdentityServer.Admin Diagram](docs/Images/Skoruba.Duende.IdentityServer.Admin-App-Diagram.png)
-
-## Roadmap & Vision
-
-### 1.0.0:
-
-- [x] Create the Business Logic & EF layers - available as a nuget package
-- [x] Create a project template using dotnet CLI - `dotnet new template`
-  - [x] First template: The administration of the Duende.IdentityServer and Asp.Net Core Identity
-- [x] Add logging into
-  - [x] Database
-  - [x] File
-  - [x] Seq
-- [x] Add localization for other languages
-  - [x] English
-  - [x] Chinese
-  - [x] Russian
-  - [x] Persian
-  - [x] Swedish
-  - [x] Danish
-  - [x] Spanish
-  - [x] French
-  - [x] Finish
-- [x] Manage profile
-- [x] Password reset
-- [x] Link account to an external provider (example with Github)
-- [x] Two-Factor Authentication (2FA)
-- [x] User registration
-- [x] Email service
-  - [x] SendGrid
-- [x] Add API
-  - [x] Duende.IdentityServer
-  - [x] Asp.Net Core Identity
-  - [x] Add swagger support
-- [x] Add audit logs to track changes ([#61](https://github.com/skoruba/IdentityServer4.Admin/issues/61))
-- [x] Docker support ([#121](https://github.com/skoruba/IdentityServer4.Admin/issues/121))
-- [x] Health Checks (Databases and IdentityServer)
-- [x] Support for multiple database providers (SqlServer, Mysql, PostgreSQL)
-- [x] Simplify Admin Identity middleware ([#430](https://github.com/skoruba/IdentityServer4.Admin/issues/430))
-- [x] Add support for loading signing key from Azure Key Vault ([#533](https://github.com/skoruba/IdentityServer4.Admin/issues/533))
-- [x] Protect keys for dataprotection from Azure Key Vault ([#715](https://github.com/skoruba/IdentityServer4.Admin/pull/715))
-- [x] Update to Duende.IdentityServer version 4 ([#633](https://github.com/skoruba/IdentityServer4.Admin/issues/633))
-- [x] Add support for themes ([#725](https://github.com/skoruba/IdentityServer4.Admin/issues/725))
-- [x] Extract UI part into nuget package ([#770](https://github.com/skoruba/IdentityServer4.Admin/issues/770), [#409](https://github.com/skoruba/IdentityServer4.Admin/issues/409), [#55](https://github.com/skoruba/IdentityServer4.Admin/issues/55), [#322](https://github.com/skoruba/IdentityServer4.Admin/issues/322), [#28](https://github.com/skoruba/IdentityServer4.Admin/issues/28), [#133](https://github.com/skoruba/IdentityServer4.Admin/issues/133))
-
-### 1.1.0
-
-- [x] Update to .NET 6
-- [x] Update to Duende IdentityServer v6
-
-### 1.2.0
-
-- [x] Update to Duende IdentityServer 6.2.1
-- [x] Add support for Dynamic Identity Providers
-
-### 2.0.0
-
-- [x] Update to .NET 8 ([#180](https://github.com/skoruba/Duende.IdentityServer.Admin/issues/180))
-- [x] Update to IdentityServer v7 ([#181](https://github.com/skoruba/Duende.IdentityServer.Admin/issues/181))
-
-### 3.0.0
-
-- [ ] New UI in React and Typescript ([#182](https://github.com/skoruba/Duende.IdentityServer.Admin/issues/182))
-- [ ] Add wizard for client registration ([#18](https://github.com/skoruba/Duende.IdentityServer.Admin/issues/18))
-
-### 3.1.0
-
-- [ ] Add management for claims ([#22](https://github.com/skoruba/Duende.IdentityServer.Admin/issues/22))
-
 ### Future:
 
 - Multitenancy support
@@ -772,15 +568,6 @@ It is possible to define the configuration according the client type - by defaul
 ## Licence
 
 This repository is licensed under the terms of the [**Apache License 2.0**](LICENSE).
-
-### Duende.IdentityServer License 🔑
-
-**Duende.IdentityServer** is available under both a **FOSS (RPL) and a commercial** license.
-
-For the production environment is necessary to get the specific license. For more information about licensing of Duende.IdentityServer - please check [this link](https://duendesoftware.com/products/identityserver#pricing).
-
-This repository uses the source code from https://github.com/DuendeSoftware/IdentityServer.Quickstart.UI which is under the terms of the following
-[**license**](https://github.com/DuendeSoftware/IdentityServer.Quickstart.UI/blob/main/LICENSE).
 
 ## Acknowledgements
 
@@ -794,44 +581,3 @@ This web application is based on these projects:
 - Bogus
 - AutoMapper
 - Serilog
-
-Thanks to [Tomáš Hübelbauer](https://github.com/TomasHubelbauer) for the initial code review.
-
-Thanks to [Dominick Baier](https://github.com/leastprivilege) and [Brock Allen](https://github.com/brockallen) - the creators of Duende.IdentityServer.
-
-## Contributors
-
-Thanks goes to these wonderful people ([emoji key](https://github.com/kentcdodds/all-contributors#emoji-key)):
-
-<!-- prettier-ignore-start -->
-| [<img src="https://avatars3.githubusercontent.com/u/35664089?s=460&v=3" width="100px;"/><br /><sub> Jan Škoruba</sub>](https://github.com/skoruba) <br /> 💻 💬 📖 💡 🤔 | [<img src="https://avatars0.githubusercontent.com/u/6831144?s=460&v=3" width="100px;"/><br /><sub> Tomáš Hübelbauer</sub>](https://github.com/TomasHubelbauer) <br /> 💻 👀 📖  🤔 | [<img src="https://avatars0.githubusercontent.com/u/1004852?s=460&v=3" width="100px;"/><br /><sub>Michał Drzał </sub>](https://github.com/xmichaelx) <br />💻 👀 📖 💡 🤔 | [<img src="https://avatars0.githubusercontent.com/u/2261603?s=460&v=3" width="100px;"/><br /><sub>cerginio </sub>](https://github.com/cerginio) <br /> 💻 🐛 💡 🤔 | [<img src="https://avatars3.githubusercontent.com/u/13407080?s=460&v=3" width="100px;"/><br /><sub>Sven Dummis </sub>](https://github.com/svendu) <br /> 📖| [<img src="https://avatars1.githubusercontent.com/u/1687087?s=460&v=3" width="100px;"/><br /><sub>Seaear</sub>](https://github.com/Seaear) <br />💻 🌍|
-| :---: | :---: | :---: | :---: | :---: | :---: |
-|[<img src="https://avatars1.githubusercontent.com/u/1150473?s=460&v=3" width="118px;"/><br /><sub>Rune Antonsen </sub>](https://github.com/ruant) <br />🐛|[<img src="https://avatars1.githubusercontent.com/u/5537607?s=460&v=3" width="118px;"/><br /><sub>Sindre Njøsen </sub>](https://github.com/Sindrenj) <br />💻|[<img src="https://avatars1.githubusercontent.com/u/40323674?s=460&v=3" width="118px;"/><br /><sub>Alevtina Brown </sub>](https://github.com/alev7ina) <br />🌍|[<img src="https://avatars3.githubusercontent.com/u/29726153?s=460&v=3" width="118px;"/><br /><sub>Brice </sub>](https://github.com/Brice-xCIT) <br />💻|[<img src="https://avatars0.githubusercontent.com/u/17114154?s=460&v=3" width="118px;"/><br /><sub>TheEvilPenguin </sub>](https://github.com/TheEvilPenguin) <br />💻|[<img src="https://avatars3.githubusercontent.com/u/15545395?s=460&v=3" width="118px;"/><br /><sub>Saeed Rahmani </sub>](https://github.com/saeedrahmo) <br />🌍|
-|[<img src="https://avatars0.githubusercontent.com/u/15867612?s=460&v=3" width="118px;"/><br /><sub>Andy Yu </sub>](https://github.com/Zyxious) <br />🌍|[<img src="https://avatars2.githubusercontent.com/u/51412447?s=400&v=3" width="118px;"/><br /><sub>ChrisSzabo </sub>](https://github.com/ChrisSzabo) <br />💻|[<img src="https://avatars1.githubusercontent.com/u/6860441?s=400&v=3" width="118px;"/><br /><sub>aiscrim </sub>](https://github.com/aiscrim) <br />💻 💡 🤔|[<img src="https://avatars2.githubusercontent.com/u/12528083?s=400&v=3" width="118px;"/><br /><sub>HrDahl </sub>](https://github.com/HrDahl) <br />🌍|[<img src="https://avatars0.githubusercontent.com/u/3269687?s=400&v=4" width="118px;"/><br /><sub>Andrew Godfroy </sub>](https://github.com/killerrin) <br />📖|[<img src="https://avatars0.githubusercontent.com/u/391353?s=400&v=3" width="118px;"/><br /><sub>bravecobra </sub>](https://github.com/bravecobra) <br />💻|
-|[<img src="https://avatars0.githubusercontent.com/u/449663?s=400&v=3" width="118px;"/><br /><sub>Sabit Igde </sub>](https://github.com/sabitertan) <br />💻|[<img src="https://avatars2.githubusercontent.com/u/7965212?s=400&v=3" width="118px;"/><br /><sub>Rico Herlt </sub>](https://github.com/rherlt) <br />💻|[<img src="https://avatars0.githubusercontent.com/u/1926879?s=400&v=3" width="118px;"/><br /><sub>b0 </sub>](https://github.com/b0) <br />💻|[<img src="https://avatars2.githubusercontent.com/u/1941149?s=400&v=3" width="118px;"/><br /><sub>DrQwertySilence </sub>](https://github.com/DrQwertySilence) <br />🌍|[<img src="https://avatars2.githubusercontent.com/u/3332745?s=400&v=3" width="118px;"/><br /><sub>Carl Quirion </sub>](https://github.com/nlz242) <br />💻|[<img src="https://avatars2.githubusercontent.com/u/43409914?s=400&v=3" width="118px;"/><br /><sub>Aegide </sub>](https://github.com/Aegide) <br />🌍|
-|[<img src="https://avatars0.githubusercontent.com/u/12243486?s=400&v=3" width="118px;"/><br /><sub>LobsterBandit </sub>](https://github.com/LobsterBandit) <br />💻|[<img src="https://avatars2.githubusercontent.com/u/3465794?s=400&v=3" width="118px;"/><br /><sub>Mehmet Perk </sub>](https://github.com/mperk) <br />💻|[<img src="https://avatars2.githubusercontent.com/u/46886295?s=400&v=3" width="118px;"/><br /><sub>tapmui </sub>](https://github.com/tapmui) <br />🌍|[<img src="https://avatars0.githubusercontent.com/u/12451743?s=400&v=3" width="118px;"/><br /><sub>Saeed Rahimi </sub>](https://github.com/saeedrahimi) <br />💻|[<img src="https://avatars3.githubusercontent.com/u/10605614?s=400&u=9d5f1bca5e31db4eb1975bd5043be2972aa32519&v=3" width="118px;"/><br /><sub>Joshua Williams </sub>](https://github.com/jwilliamsnephos) <br />💻|[<img src="https://avatars3.githubusercontent.com/u/12607748?s=400&u=189a0ff36baaeab34250062fe26ed13a1b78c011&v=3" width="118px;"/><br /><sub>Shengjie Yan </sub>](https://github.com/sheng-jie) <br />💻
-|[<img src="https://avatars3.githubusercontent.com/u/18211871?s=400&u=a994693d3f5d7c5d5365a635af54106452bc16cb&v=3" width="118px;"/><br /><sub>Anatoliy </sub>](https://github.com/UspAN) <br />💻|[<img src="https://avatars0.githubusercontent.com/u/3778268?s=400&u=1702548638153e09cf51d2a80731c7f33ea9185f&v=3" width="118px;"/><br /><sub>Nicholas Peterson </sub>](https://github.com/nickelbob) <br />💻|[<img src="https://avatars2.githubusercontent.com/u/13870734?s=400&u=cbc2f60b6cd630a286b7e7b1c157951287f25563&v=3" width="118px;"/><br /><sub>Alec Papierniak </sub>](https://github.com/AlecPapierniak) <br />💻|[<img src="https://avatars0.githubusercontent.com/u/33623601?s=400&u=53a2bb57c68045766f11fcc5fd6d0282992fec39&v=3" width="118px;"/><br /><sub>Carl Reid </sub>](https://github.com/carlreid) <br />💻|[<img src="https://avatars1.githubusercontent.com/u/12170676?s=400&u=5053e27317b4f7f577504aa0c1c3fddc0dbcbb89&v=3" width="118px;"/><br /><sub>ViRuSTriNiTy </sub>](https://github.com/ViRuSTriNiTy) <br />💻|[<img src="https://avatars2.githubusercontent.com/u/10232683?s=400&v=3" width="118px;"/><br /><sub>J. Arturo </sub>](https://github.com/zinkpad) <br />💻
-|[<img src="https://avatars1.githubusercontent.com/u/7604648?s=400&u=59a1ce466533aadb4c02944805c62957935b0ba9&v=3" width="118px;"/><br /><sub>Weihan Li </sub>](https://github.com/WeihanLi) <br />💻|[<img src="https://avatars3.githubusercontent.com/u/4563019?s=400&v=3" width="118px;"/><br /><sub>Saša Tančev </sub>](https://github.com/tancevsasa) <br />💻|[<img src="https://avatars1.githubusercontent.com/u/12811343?s=400&u=a417cca5ea7e206ecd979d2f623502bc766a504c&v=3" width="118px;"/><br /><sub>cuibty </sub>](https://github.com/cuibty) <br />💻|[<img src="https://avatars3.githubusercontent.com/u/17126867?s=400&u=387bb1de303c993b683cd1335f57a96e1671be45&v=3" width="118px;"/><br /><sub>Simo Paasisalo </sub>](https://github.com/spaasis) <br />💻|[<img src="https://avatars1.githubusercontent.com/u/10352866?s=400&v=3" width="118px;"/><br /><sub>klyse </sub>](https://github.com/klyse) <br />💻|[<img src="https://avatars0.githubusercontent.com/u/19854428?s=400&u=d0f37a7f51e8eaac4da754c9f8deae714e03da65&v=3" width="118px;"/><br /><sub>Martinus Suherman </sub>](https://github.com/martinussuherman) <br />💻
-|[<img src="https://avatars1.githubusercontent.com/u/540241?s=400&v=3" width="118px;"/><br /><sub>Pavel Usachev </sub>](https://github.com/pavel-usachev) <br />💻|[<img src="https://avatars2.githubusercontent.com/u/64419131?s=400&u=e18b51ba9a0c1c2bf69ed86fba2251b44c1c3136&v=3" width="118px;"/><br /><sub>LabTrans - STIGeo </sub>](https://github.com/labtrans-ufsc) <br />🌍|[<img src="https://avatars1.githubusercontent.com/u/7376668?s=400&u=93af8ae5f2980c172f2ca13b5380f20a50053866&v=4" width="118px;"/><br /><sub>Valentin LECERF </sub>](https://github.com/ioxFR) <br />💻|[<img src="https://avatars0.githubusercontent.com/u/9968151?s=400&u=c210e5d589ec6433069105d1420bf3d8cb6265f2&v=4" width="118px;"/><br /><sub>Thomas Aunvik </sub>](https://github.com/ThomasAunvik) <br />🐛|[<img src="https://avatars1.githubusercontent.com/u/661509?s=400&u=16eeaa522ebe0f92ef2851b7bbf721f349b815b5&v=4" width="118px;"/><br /><sub>Sebastian Gebhardt </sub>](https://github.com/sgebhardt) <br />🐛
-<!-- prettier-ignore-end -->
-
-This project follows the [all-contributors](https://github.com/kentcdodds/all-contributors) specification.
-Contributions of any kind are welcome!
-
-## Contact and Suggestion
-
-I am happy to share my attempt of the implementation of the administration for Duende.IdentityServer and ASP.NET Core Identity.
-
-Any feedback is welcome - feel free to create an issue or send me an email - [jan@skoruba.com](mailto:jan@skoruba.com). Thank you :blush:
-
-## Support and Donation 🕊️
-
-If you like my work, you can support me by donation. 👍
-
-### Paypal
-
-https://www.paypal.me/skoruba
-
-### Patreon
-
-https://www.patreon.com/skoruba
